@@ -57,13 +57,18 @@ No olvides verificar en qué directorio se encuentra el archivo Dockerfile
 ```
 
 **¿Cuántos pasos se han ejecutado?**
-# RESPONDER 
+Se han ejecutado 6 pasos, correspondientes a las 6 instrucciones del Dockerfile (FROM, RUN, RUN, COPY, EXPOSE y CMD).
 
 ### Inspeccionar la imagen creada
-# COMPLETAR CON UNA CAPTURA
+<img width="842" height="767" alt="image" src="https://github.com/user-attachments/assets/24e9e566-88a8-4a23-baa3-a97c26403d1d" />
+
+
+
 
 **Modificar el archivo index.html para incluir su nombre y luego crear una nueva versión de la imagen anterior**
 **¿Cuántos pasos se han ejecutado? ¿Observa algo diferente en la creación de la imagen**
+
+Se ejecutaron 6 pasos nuevamente. Solo que con una diferencia enorme en el tiempo de creación. Mientras que la primera imagen tardó 153 segundos, la segunda tardó solo 3.7 segundos. Esto se debe al mecanismo de caché. Docker reutilizó las capas de la versión anterior que no sufrieron cambios (el FROM, el yum update y el yum install httpd), mostrando la etiqueta CACHED en la consola. Solo volvió a ejecutar el paso COPY porque el archivo index.html fue modificado al agregar mi nombre, lo que invalidó la caché a partir de ese punto.
 
 ## Mecanismo de caché
 Docker usa un mecanismo de caché cuando crea imágenes para acelerar el proceso de construcción y evitar la repetición de pasos que no han cambiado. Cada instrucción en un Dockerfile crea una capa en la imagen final. Docker intenta reutilizar las capas de una construcción anterior si no han cambiado, lo que reduce significativamente el tiempo de construcción.
@@ -75,14 +80,15 @@ Docker usa un mecanismo de caché cuando crea imágenes para acelerar el proceso
 
 ### Crear un contenedor a partir de las imagen creada, mapear todos los puertos
 ```
-
+docker run -d --name servidor-apache -P mi-apache:1.0
 ```
 
 ### ¿Con que puerto host se está realizando el mapeo?
-# COMPLETAR CON LA RESPUESTA
+Al usar la bandera -P, Docker asigna un puerto aleatorio del host al puerto 80 del contenedor. En mi caso, al poner el comando ```docker ps``` en la columna de PORT indica el puerto host asignado fue el 32770.
+
 
 **¿Qué es una imagen huérfana?**
-# COMPLETAR CON LA RESPUESTA
+Una imagen huérfana o dangling image, es una imagen que no tiene ninguna etiqueta asignada aparece como <none>:<none> en el listado, y que no está siendo utilizada por ningún contenedor. Suelen generarse durante la construcción de nuevas versiones de una imagen o al quedar capas intermedias obsoletas. Ocupan espacio en disco y pueden eliminarse de forma segura usando comandos de limpieza de Docker.
 
 ### Identificar imágenes huérfanas
 ```
